@@ -42,7 +42,13 @@ def getEnumMatches(regexMap, text):
     @type regexMap: dict
     @param text: The text to find matches from
     """
-    pass
+    matches=[]
+    for enum in regexMap:
+        regex=regexMap[enum]
+        if getMatch(regex, text) is not None:
+            matches.append(enum)
+    return matches
+    
 
 def extractNumber(text):
     """
