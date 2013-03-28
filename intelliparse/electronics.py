@@ -90,4 +90,5 @@ def parseZoom(text):
     return None
 
 
-print parsers.parse(parsers.ELECTRONICS, 'zoom', 'I have a 32 gb flash with 10x zoom drive')
+parser=parsers.getParser(parsers.ELECTRONICS)
+print parser.parse('zoom', 'I have a 32 gb flash with 10x zoom drive')
