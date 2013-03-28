@@ -15,6 +15,24 @@ def extractNameFromParser(funcName):
 	return name
 
 
+def getParserNames(family):
+	names=[]
+	for key in knownParsers:
+		keyfam, name = key
+		if family==keyfam:
+			names.append(name)
+	return names
+
+
+def parse(family, name, text):
+	key=(family, name)
+	if key in knownParsers:
+		parseFunction=knownParsers[key]
+		return parseFunction(text)
+	else:
+		return None
+
+
 class parser(object):
 	"""
 	A decorator to mark a parser function with a family and a
@@ -37,18 +55,14 @@ class parser(object):
 		return wrapper
 
 
-def getParserNames(family):
-	names=[]
-	for key in knownParsers:
-		keyfam, name = key
-		if family==keyfam:
-			names.append(name)
-	return names
+class ParsingHelper(object):
 
-def parse(family, name, text):
-	key=(family, name)
-	if key in knownParsers:
-		parseFunction=knownParsers[key]
-		return parseFunction(text)
-	else:
-		return None
+	def __init__(self, family):
+		self.family=family
+
+	def parse(self, name, text):
+		return parse(self.family, name, text)
+
+
+def getParser(family):
+	return ParsingHelper(family)
