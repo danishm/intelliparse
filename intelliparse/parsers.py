@@ -1,6 +1,21 @@
 ELECTRONICS='electronics'
 
+# .------------------------.
+# | Known Parsers Library  |
+# '========================'
+
+# Stores all the parsers annotated by the @parser decorator
+# Its a dict of dict { family: {parserName: parseFunction}}
 knownParsers={}
+
+def addKnownParser(family, name, function):
+	familyParsers=knownParsers.get(family)
+	if familyParsers is None:
+		familyParsers={}
+		knownParsers[family]=familyParsers
+
+	familyParsers[name]=function
+
 
 def extractNameFromParser(funcName):
 	"""
@@ -16,22 +31,21 @@ def extractNameFromParser(funcName):
 
 
 def getParserNames(family):
-	names=[]
-	for key in knownParsers:
-		keyfam, name = key
-		if family==keyfam:
-			names.append(name)
-	return names
+	familyParsers=knownParsers.get(family)
+	if familyParsers is not None:
+		return familyParsers.keys()
 
 
 def parse(family, name, text):
-	key=(family, name)
-	if key in knownParsers:
-		parseFunction=knownParsers[key]
-		return parseFunction(text)
-	else:
-		return None
+	familyParsers=knownParsers.get(family)
+	if familyParsers is not None:
+		parser=familyParsers[name]
+		if parser is not None:
+			return parser(text)
 
+# .------------------------.
+# | Decorator Support      |
+# '========================'
 
 class parser(object):
 	"""
@@ -48,7 +62,7 @@ class parser(object):
 
 	def __call__(self, func):
 		if self.name==None: self.name=extractNameFromParser(func.__name__)
-		knownParsers[(self.family, self.name)]=func
+		addKnownParser(self.family, self.name, func)
 		def wrapper(*args, **kwargs):
 			return func
 
@@ -62,6 +76,18 @@ class ParsingHelper(object):
 
 	def parse(self, name, text):
 		return parse(self.family, name, text)
+
+	def parseAll(self, text):
+		results={}
+		familyParsers=knownParsers[self.family]
+		if familyParsers is not None:
+			for name in familyParsers:
+				parser=familyParsers[name]
+				result=parser(text)
+				if result is not None:
+					results[name]=result
+		return results
+
 
 
 def getParser(family):

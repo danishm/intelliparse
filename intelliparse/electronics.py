@@ -17,7 +17,7 @@ STORAGE_SIZE_UNIT_REGEX     = '[K, M, G, T]B'
 
 SCREEN_SIZE_REGEX           = '(\\d+\\.?\\d*) ?(INCH|")'
 
-MEGA_PIXEL_REGEX            = '(\\d+\\.?\\d*)[ ,-]?()'
+MEGA_PIXEL_REGEX            = '(\\d+\\.?\\d*)[ ,-]?(MP|MEGAPIXEL)'
 
 CONNECTORS_REGEX_MAP        = { 'USB 1': 'USB[ |-]?1',
                                 'USB 2.0': 'USB[ |-]?2(.0)?',
@@ -32,7 +32,6 @@ STORAGE_SIZE_MULTIPLIERS = {
     'TB': K
 }
 
-@parser(family=parsers.ELECTRONICS)
 def parseStorageSizeUnit(text):
     """Extract the unit of storage e.g. MB, GB etc."""
     return reutils.getMatch(STORAGE_SIZE_UNIT_REGEX, text.upper())
@@ -88,7 +87,3 @@ def parseZoom(text):
         return size
         
     return None
-
-
-parser=parsers.getParser(parsers.ELECTRONICS)
-print parser.parse('zoom', 'I have a 32 gb flash with 10x zoom drive')
