@@ -64,7 +64,7 @@ class parser(object):
 		if self.name==None: self.name=extractNameFromParser(func.__name__)
 		addKnownParser(self.family, self.name, func)
 		def wrapper(*args, **kwargs):
-			return func
+			return func(*args, **kwargs)
 
 		return wrapper
 
