@@ -12,7 +12,7 @@ from parsers import parser
 K   = Decimal('1024.0')
 ONE = Decimal('1.0')
 
-STORAGE_SIZE_PREGEX         = ' ([0-9,.]+) ?([K, M, G, T]B)[ ,.]'
+STORAGE_SIZE_PREGEX         = '\\b([0-9,.]+) ?([K, M, G, T]B)[ ,.]'
 STORAGE_SIZE_UNIT_REGEX     = '[K, M, G, T]B'
 
 SCREEN_SIZE_REGEX           = '(\\d+\\.?\\d*) ?(INCH|")'
