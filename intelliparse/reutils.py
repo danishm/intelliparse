@@ -13,12 +13,8 @@ def getMatches(regex, text):
     @type regex: Compiled regex or string
     @param text: The text to find matches from
     """
-    result=[]
     matches=re.findall(regex, text)
-    for match in matches:
-        result.append(match)
-    
-    return result
+    return matches
 
 
 def getMatch(regex, text):
