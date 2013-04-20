@@ -32,28 +32,22 @@ STORAGE_SIZE_MULTIPLIERS = {
     'TB': K
 }
 
-def parseStorageSizeUnit(text):
-    """Extract the unit of storage e.g. MB, GB etc."""
-    return reutils.getMatch(STORAGE_SIZE_UNIT_REGEX, text.upper())
-
-
 @parser(family=parsers.ELECTRONICS)
-def parseStorageSize(text):
+def parse_storage_size(text):
     """Parse Storage Size from text"""
-    match=reutils.getMatch(STORAGE_SIZE_PREGEX, text.upper())
+    match=reutils.get_match(STORAGE_SIZE_PREGEX, text.upper())
     if match is not None:
         size=Decimal(match[0])
         unit=match[1]
-        print 'Found', size, unit
         if unit in STORAGE_SIZE_MULTIPLIERS:
             return size*STORAGE_SIZE_MULTIPLIERS[unit]
     return None
 
 
 @parser(family=parsers.ELECTRONICS)
-def parseScreenSize(text):
+def parse_screen_size(text):
     """Parse ScreenSize from text"""
-    match=reutils.getMatch(SCREEN_SIZE_REGEX, text.upper())
+    match=reutils.get_match(SCREEN_SIZE_REGEX, text.upper())
     if match is not None:
         size=Decimal(match[0])
         return size
@@ -62,9 +56,9 @@ def parseScreenSize(text):
 
 
 @parser(family=parsers.ELECTRONICS)
-def parseMegaPixels(text):
+def parse_mega_pixels(text):
     """Parse Mega Pixels from text"""
-    match=reutils.getMatch(MEGA_PIXEL_REGEX, text.upper())
+    match=reutils.get_match(MEGA_PIXEL_REGEX, text.upper())
     if match is not None:
         mp=Decimal(match[0])
         return mp
@@ -73,15 +67,15 @@ def parseMegaPixels(text):
 
 
 @parser(family=parsers.ELECTRONICS)
-def parseConnectors(text):
+def parse_connector(text):
     """Parse connectors available on the device"""
-    return reutils.getEnumMatches(CONNECTORS_REGEX_MAP, text.upper())
+    return reutils.get_enum_matches(CONNECTORS_REGEX_MAP, text.upper())
 
 
 @parser(family=parsers.ELECTRONICS)
-def parseZoom(text):
+def parse_zoom(text):
     """Parse Zoom from text"""
-    match=reutils.getMatch(ZOOM_REGEX, text.upper())
+    match=reutils.get_match(ZOOM_REGEX, text.upper())
     if match is not None:
         size=Decimal(match)
         return size

@@ -6,40 +6,39 @@ ELECTRONICS='electronics'
 
 # Stores all the parsers annotated by the @parser decorator
 # Its a dict of dict { family: {parserName: parseFunction}}
-knownParsers={}
+known_parsers={}
 
-def addKnownParser(family, name, function):
-	familyParsers=knownParsers.get(family)
-	if familyParsers is None:
-		familyParsers={}
-		knownParsers[family]=familyParsers
+def add_parser(family, name, function):
+	parser_family = known_parsers.get(family)
+	if parser_family is None:
+		parser_family={}
+		known_parsers[family]=parser_family
 
-	familyParsers[name]=function
+	parser_family[name]=function
 
 
-def extractNameFromParser(funcName):
+def extract_name_from_function(func_name):
 	"""
-	Extrats a name from a parser function. It expects the name
+	Extracts a name from a parser function. It expects the name
 	to start with 'parse' with the remaining name in camel case.
 	"""
-	if funcName.startswith('parse'):
-		name=funcName.replace('parse', '')
-		name=name[0].lower()+name[1:]
+	if func_name.startswith('parse_'):
+		name=func_name.replace('parse_', '')
 	else:
-		name=funcName
+		name=func_name
 	return name
 
 
-def getParserNames(family):
-	familyParsers=knownParsers.get(family)
-	if familyParsers is not None:
-		return familyParsers.keys()
+def get_parser_names(family):
+	parser_family=known_parsers.get(family)
+	if parser_family is not None:
+		return parser_family.keys()
 
 
 def parse(family, name, text):
-	familyParsers=knownParsers.get(family)
-	if familyParsers is not None:
-		parser=familyParsers[name]
+	parser_family=known_parsers.get(family)
+	if parser_family is not None:
+		parser=parser_family[name]
 		if parser is not None:
 			return parser(text)
 
@@ -61,8 +60,8 @@ class parser(object):
 		self.name=name
 
 	def __call__(self, func):
-		if self.name==None: self.name=extractNameFromParser(func.__name__)
-		addKnownParser(self.family, self.name, func)
+		if self.name==None: self.name=extract_name_from_function(func.__name__)
+		add_parser(self.family, self.name, func)
 		def wrapper(*args, **kwargs):
 			return func(*args, **kwargs)
 
@@ -77,18 +76,17 @@ class ParsingHelper(object):
 	def parse(self, name, text):
 		return parse(self.family, name, text)
 
-	def parseAll(self, text):
+	def parse_all(self, text):
 		results={}
-		familyParsers=knownParsers[self.family]
-		if familyParsers is not None:
-			for name in familyParsers:
-				parser=familyParsers[name]
+		parser_family=known_parsers[self.family]
+		if parser_family is not None:
+			for name in parser_family:
+				parser=parser_family[name]
 				result=parser(text)
 				if result is not None:
 					results[name]=result
 		return results
 
 
-
-def getParser(family):
+def get_parser_family(family):
 	return ParsingHelper(family)
