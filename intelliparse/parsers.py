@@ -29,19 +29,6 @@ def extract_name_from_function(func_name):
 	return name
 
 
-def get_parser_names(family):
-	parser_family=known_parsers.get(family)
-	if parser_family is not None:
-		return parser_family.keys()
-
-
-def parse(family, name, text):
-	parser_family=known_parsers.get(family)
-	if parser_family is not None:
-		parser=parser_family[name]
-		if parser is not None:
-			return parser(text)
-
 # .------------------------.
 # | Decorator Support      |
 # '========================'
@@ -68,6 +55,30 @@ class parser(object):
 		return wrapper
 
 
+def parse(family, name, text):
+	parser_family=known_parsers.get(family)
+	if parser_family is not None:
+		parser=parser_family.get(name)
+		if parser is not None:
+			return parser(text)
+		else:
+			raise Exception('Unknown Parser "%s" for Parser Family "%s"' % (name, family))
+	else:
+		raise Exception('Unknown Parser Family "%s"' % family)
+	
+def parse_all(family, text):
+	results={}
+	parser_family=known_parsers.get(family)
+	if parser_family is not None:
+		for name in parser_family:
+			parser=parser_family[name]
+			result=parser(text)
+			if result is not None:
+				results[name]=result
+		return results
+	else:
+		raise Exception('Unknown Parser Family "%s"' % family)
+		
 class ParsingHelper(object):
 
 	def __init__(self, family):
@@ -77,16 +88,5 @@ class ParsingHelper(object):
 		return parse(self.family, name, text)
 
 	def parse_all(self, text):
-		results={}
-		parser_family=known_parsers[self.family]
-		if parser_family is not None:
-			for name in parser_family:
-				parser=parser_family[name]
-				result=parser(text)
-				if result is not None:
-					results[name]=result
-		return results
+		return parse_all(self.family, text)
 
-
-def get_parser_family(family):
-	return ParsingHelper(family)

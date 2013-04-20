@@ -67,9 +67,13 @@ def parse_mega_pixels(text):
 
 
 @parser(family=parsers.ELECTRONICS)
-def parse_connector(text):
+def parse_connectors(text):
     """Parse connectors available on the device"""
-    return reutils.get_enum_matches(CONNECTORS_REGEX_MAP, text.upper())
+    matches = reutils.get_enum_matches(CONNECTORS_REGEX_MAP, text.upper())
+    if len(matches)>0:
+        return matches
+    else:
+        return None
 
 
 @parser(family=parsers.ELECTRONICS)
