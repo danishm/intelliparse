@@ -6,11 +6,11 @@ available in the market e.g. Tables, Flash Drives, Camera etc
 """
 import reutils
 import parsers
-from decimal import Decimal
+import utils
 from parsers import parser
 
-K   = Decimal('1024.0')
-ONE = Decimal('1.0')
+K   = utils.to_float('1024.0')
+ONE = utils.to_float('1.0')
 
 STORAGE_SIZE_PREGEX         = '\\b([0-9,.]+) ?([K, M, G, T]B)[ ,.]'
 STORAGE_SIZE_UNIT_REGEX     = '[K, M, G, T]B'
@@ -37,7 +37,7 @@ def parse_storage_size(text):
     """Parse Storage Size from text"""
     match=reutils.get_match(STORAGE_SIZE_PREGEX, text.upper())
     if match is not None:
-        size=Decimal(match[0])
+        size=utils.to_float(match[0])
         unit=match[1]
         if unit in STORAGE_SIZE_MULTIPLIERS:
             return size*STORAGE_SIZE_MULTIPLIERS[unit]
@@ -49,7 +49,7 @@ def parse_screen_size(text):
     """Parse ScreenSize from text"""
     match=reutils.get_match(SCREEN_SIZE_REGEX, text.upper())
     if match is not None:
-        size=Decimal(match[0])
+        size=utils.to_float(match[0])
         return size
         
     return None
@@ -60,7 +60,7 @@ def parse_mega_pixels(text):
     """Parse Mega Pixels from text"""
     match=reutils.get_match(MEGA_PIXEL_REGEX, text.upper())
     if match is not None:
-        mp=Decimal(match[0])
+        mp=utils.to_float(match[0])
         return mp
         
     return None
@@ -81,7 +81,7 @@ def parse_zoom(text):
     """Parse Zoom from text"""
     match=reutils.get_match(ZOOM_REGEX, text.upper())
     if match is not None:
-        size=Decimal(match)
+        size=utils.to_float(match)
         return size
         
     return None
