@@ -7,6 +7,7 @@ available in the market e.g. Tables, Flash Drives, Camera etc
 import reutils
 import parsers
 import utils
+import basic
 from parsers import parser
 
 K   = utils.to_float('1024.0')
@@ -85,3 +86,7 @@ def parse_zoom(text):
         return size
         
     return None
+
+@parser(family=parsers.ELECTRONICS)
+def parse_basic_color(text):
+    return basic.parse_color(text)
