@@ -1,33 +1,3 @@
-ELECTRONICS='electronics'
-
-# .------------------------.
-# | Known Parsers Library  |
-# '========================'
-
-# Stores all the parsers annotated by the @parser decorator
-# Its a dict of dict { family: {parserName: parseFunction}}
-known_parsers={}
-
-def add_parser(family, name, function):
-	parser_family = known_parsers.get(family)
-	if parser_family is None:
-		parser_family={}
-		known_parsers[family]=parser_family
-
-	parser_family[name]=function
-
-
-def extract_name_from_function(func_name):
-	"""
-	Extracts a name from a parser function. It expects the name
-	to start with 'parse' with the remaining name in camel case.
-	"""
-	if func_name.startswith('parse_'):
-		name=func_name.replace('parse_', '')
-	else:
-		name=func_name
-	return name
-
 
 # .------------------------.
 # | Decorator Support      |
@@ -41,52 +11,13 @@ class parser(object):
 	function name is 'parseStorageSize' then the parser name is
 	'storageSize'
 	"""
-
-	def __init__(self, family, name=None):
-		self.family=family
-		self.name=name
-
-	def __call__(self, func):
-		if self.name==None: self.name=extract_name_from_function(func.__name__)
-		add_parser(self.family, self.name, func)
-		def wrapper(*args, **kwargs):
-			return func(*args, **kwargs)
-
-		return wrapper
-
-
-def parse(family, name, text):
-	parser_family=known_parsers.get(family)
-	if parser_family is not None:
-		parser=parser_family.get(name)
-		if parser is not None:
-			return parser(text)
-		else:
-			raise Exception('Unknown Parser "%s" for Parser Family "%s"' % (name, family))
-	else:
-		raise Exception('Unknown Parser Family "%s"' % family)
 	
-def parse_all(family, text):
-	results={}
-	parser_family=known_parsers.get(family)
-	if parser_family is not None:
-		for name in parser_family:
-			parser=parser_family[name]
-			result=parser(text)
-			if result is not None:
-				results[name]=result
-		return results
-	else:
-		raise Exception('Unknown Parser Family "%s"' % family)
-		
-class ParsingHelper(object):
+	parsers={}
+	
+	def __init__(self):
+		pass
 
-	def __init__(self, family):
-		self.family=family
-
-	def parse(self, name, text):
-		return parse(self.family, name, text)
-
-	def parse_all(self, text):
-		return parse_all(self.family, text)
+	def __call__(self, parser):
+		self.parsers[parser.name] = parser()
+		return parser
 
