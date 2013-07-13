@@ -6,7 +6,7 @@ available in the market e.g. Tables, Flash Drives, Camera etc
 """
 import reutils
 import utils
-from parsers import parser
+from parsers import Parser
 
 K   = utils.to_float('1024.0')
 ONE = utils.to_float('1.0')
@@ -31,7 +31,7 @@ STORAGE_SIZE_MULTIPLIERS = {
     'TB': K
 }
 
-@parser()
+@Parser()
 class StorageSizeParser(object):
     name = 'storage_size'
     label = 'Storage Size'
@@ -50,7 +50,7 @@ class StorageSizeParser(object):
         return '%s GB' % value
 
 
-@parser()
+@Parser()
 class ScreenSizeParser(object):
     name = "screen_size"
     label = "Screen Size"
@@ -68,7 +68,7 @@ class ScreenSizeParser(object):
         return '%s"' % value
 
 
-@parser()
+@Parser()
 class MegaPixelsParser(object):
     name = "mega_pixels"
     label = "Mega Pixels"
@@ -86,7 +86,7 @@ class MegaPixelsParser(object):
         return '%s MP' % value
 
 
-@parser()
+@Parser()
 class ConnectorsParser(object):
     name = "connectors"
     label = "Connectors"
@@ -103,10 +103,10 @@ class ConnectorsParser(object):
         return '%s' % value
 
 
-@parser()
+@Parser()
 class ZoomParser(object):
     name = "zoom"
-    label = "Connectors"
+    label = "Zoom"
     
     def parse(self, text):
         """Parse Zoom from text"""

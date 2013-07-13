@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='IntelliParse',
-    version='0.1.0',
+    version='0.2.0',
     author='Danish Mujeeb',
     author_email='danish@dsharpapps.com',
     packages=['intelliparse', 'intelliparse.tests'],
