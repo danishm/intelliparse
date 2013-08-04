@@ -42,8 +42,3 @@ def render(name, value):
 	Render a property value for display
 	'''
 	return Parser.render(name, value)
-
-
-
-
-print get_catalogue()
